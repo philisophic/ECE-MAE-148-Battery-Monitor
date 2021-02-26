@@ -1,4 +1,4 @@
-#define TEST_MODE             1     // If test mode is enable then pin-3 simulates the jetson nano wake up signal
+#define TEST_MODE               1     // If test mode is enable then pin-3 simulates the jetson nano wake up signal
 #if TEST_MODE
   #define WAKE_UP_SIGNAL_PIN    3
   #define TEST_DELAY            2*1000 // 15 seconds
@@ -31,7 +31,6 @@ void setup()
 // Main processing loop
 void loop() 
 {
-  Serial.println("Hello \r\n");
   // Disable global interrupts
   noInterrupts();
     
@@ -57,7 +56,7 @@ void loop()
     }
     // Generate string of voltages for Jetson nano 
     sprintf(jetson_log, "%.2f,%.2f,%.2f\n", lipo_voltage[0], lipo_voltage[1], lipo_voltage[2]);
-    Serial.println(jetson_log);
+    Serial.print(jetson_log);
     
     // ready for next interrupt
     wake_up = false;
