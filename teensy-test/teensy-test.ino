@@ -1,7 +1,8 @@
+//Macros
 #define TEST_MODE               1     // If test mode is enable then pin-3 simulates the jetson nano wake up signal
 #if TEST_MODE
   #define WAKE_UP_SIGNAL_PIN    6
-  #define TEST_DELAY            2*1000 // 15 seconds
+  #define TEST_DELAY            2*1000 // 2 seconds
 #endif        
 #define WAKE_UP_INTERRUPT_PIN   2     // Wake up interrupt pin 
 #define NO_CELLS                3     // Number of cells in the LIPO
@@ -10,13 +11,14 @@
 #define ADC_RESOLUTION          65535 // 16 bit resolution
 #define NUM_ADC_SAMPLE          300   // Number of ADC samples to average
 
+// Global variables
 bool    wake_up                        = true;
 int     adc_teensy[NO_CELLS]           = {A0, A3, A6};                                                           // ADC channels to read voltages
 float   cell_voltage_ratios[NO_CELLS]  = {(ONE_CELL_VOLTAGE/3.3), (2*ONE_CELL_VOLTAGE/3.3), (3*ONE_CELL_VOLTAGE/3.3)}; // Cells are in series on the LIPO
-// float   accumulate[NO_CELLS]        = {0, 0, 0};
 float   accumulate                     = 0;
 float   lipo_voltage[NO_CELLS]         = {0, 0, 0};
 char    jetson_log[6]                  = ""; 
+
 // Setup the Teensy  
 void setup() 
 {
