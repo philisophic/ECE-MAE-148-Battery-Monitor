@@ -10,13 +10,13 @@
 #define ADC_RESOLUTION          65535 // 16 bit resolution
 #define NUM_ADC_SAMPLE          300   // Number of ADC samples to average
 
-bool    wake_up                 = true;
-int     adc_teensy[NO_CELLS]    = {A0, A3, A6};                                                           // ADC channels to read voltages
-float   cell_voltage_ratios[NO_CELLS]  = {(ONE_CELL_VOLTAGE/3), (2*ONE_CELL_VOLTAGE/3), (3*ONE_CELL_VOLTAGE/3)}; // Cells are in series on the LIPO
-// float   accumulate[NO_CELLS]    = {0, 0, 0};
-float   accumulate = 0;
-float   lipo_voltage[NO_CELLS]  = {0, 0, 0};
-char    jetson_log[6]           = ""; 
+bool    wake_up                        = true;
+int     adc_teensy[NO_CELLS]           = {A0, A3, A6};                                                           // ADC channels to read voltages
+float   cell_voltage_ratios[NO_CELLS]  = {(ONE_CELL_VOLTAGE/3.3), (2*ONE_CELL_VOLTAGE/3.3), (3*ONE_CELL_VOLTAGE/3.3)}; // Cells are in series on the LIPO
+// float   accumulate[NO_CELLS]        = {0, 0, 0};
+float   accumulate                     = 0;
+float   lipo_voltage[NO_CELLS]         = {0, 0, 0};
+char    jetson_log[6]                  = ""; 
 // Setup the Teensy  
 void setup() 
 {
@@ -31,42 +31,30 @@ void setup()
 
 // Main processing loop
 void loop() 
-{
-  Serial.println("Hello \r\n");  
-#if 1
+{ 
   // Disable global interrupts
-  // noInterrupts();
+  noInterrupts();
     
   // Read ADC if Jetson Nano has requested
   if(wake_up)
   { 
 #if TEST_MODE
-  Serial.println("Process ADC and respond to jetson nano \r\n");                       
+  Serial.println("Process ADC and respond to jetson nano");                       
 #endif      
     // j = 0 Read one cell voltage       - 4V
     // j = 1 Read two cells voltage      - 8V
     // j = 2 Read the three cell voltage - 12V
     for (int j=0; j<NO_CELLS; j++)
     {
-      Serial.print("Cell voltage ratios: ");
-      Serial.print(cell_voltage_ratios[j]);
-      Serial.print(" \n"); 
-      accumulate   = 0.0;
+      accumulate      = 0.0;
       lipo_voltage[j] = 0.0;
             
 	    for (int i = 0; i < NUM_ADC_SAMPLE; i++) 
 	    {      
-        // accumulate = accumulate + (analogRead(A0) * (ADC_REF_VOLTAGE / ADC_RESOLUTION) * cell_voltage[j]);
         accumulate += analogRead(adc_teensy[j]) * ADC_REF_VOLTAGE / ADC_RESOLUTION * cell_voltage_ratios[j];
 		    delay(1);
 	    }
-      lipo_voltage[j] = accumulate/NUM_ADC_SAMPLE;
-      Serial.print("j: ");
-      Serial.print(j);
-      Serial.print(" \n");      
-      Serial.print("accumulate: ");
-      Serial.print(accumulate);
-      Serial.print(" \n");  
+      lipo_voltage[j] = accumulate/NUM_ADC_SAMPLE; 
           
     }
     // Generate string of voltages for Jetson nano 
@@ -78,7 +66,7 @@ void loop()
   }
   
   // Enable global interrupts
-  // interrupts();
+  interrupts();
 
 #if TEST_MODE
   digitalWrite(WAKE_UP_SIGNAL_PIN, LOW); // Set the low
@@ -86,18 +74,14 @@ void loop()
   digitalWrite(WAKE_UP_SIGNAL_PIN, HIGH); // Set the high
   delay(TEST_DELAY);                        
 #endif 
-#endif
 }
 
 // wake up ISR 
 void wake_up_isr (void)
 {
   wake_up = true;
-  // lipo_voltage[0] = 0.0;
-  // lipo_voltage[1] = 0.0;
-  // lipo_voltage[2] = 0.0; 
   analogReadResolution(16);
 #if TEST_MODE
-  Serial.println("Wake up interrupt \r\n");                       
+  Serial.println("Wake up interrupt");                       
 #endif   
 }
