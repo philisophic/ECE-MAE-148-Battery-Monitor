@@ -1,5 +1,5 @@
 //Macros
-#define TEST_MODE               1     // If test mode is enable then pin-3 simulates the jetson nano wake up signal
+#define TEST_MODE               0     // If test mode is enable then pin-3 simulates the jetson nano wake up signal
 #if TEST_MODE
   #define WAKE_UP_SIGNAL_PIN    6
   #define TEST_DELAY            2*1000 // 2 seconds
@@ -14,7 +14,7 @@
 // Global variables
 bool    wake_up                        = true;
 int     adc_teensy[NO_CELLS]           = {A0, A3, A6};                                                           // ADC channels to read voltages
-float   cell_voltage_ratios[NO_CELLS]  = {(ONE_CELL_VOLTAGE/3.3), (2*ONE_CELL_VOLTAGE/3.3), (3*ONE_CELL_VOLTAGE/3.3)}; // Cells are in series on the LIPO
+float   cell_voltage_ratios[NO_CELLS]  = {(ONE_CELL_VOLTAGE/3.255), (2*ONE_CELL_VOLTAGE/3.357), (3*ONE_CELL_VOLTAGE/3.2420)}; // Cells are in series on the LIPO
 float   accumulate                     = 0;
 float   lipo_voltage[NO_CELLS]         = {0, 0, 0};
 char    jetson_log[6]                  = ""; 
