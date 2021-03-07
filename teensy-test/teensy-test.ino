@@ -27,7 +27,7 @@ void setup()
   pinMode(WAKE_UP_INTERRUPT_PIN, INPUT_PULLUP);                // Set the wake up pin as an input
   attachInterrupt(WAKE_UP_INTERRUPT_PIN, wake_up_isr, RISING); // Configuring wake up interrupt from Jetson Nano
 #if TEST_MODE
-  pinMode(WAKE_UP_SIGNAL_PIN, OUTPUT);                         // Set the wake up pin as an input
+  pinMode(WAKE_UP_SIGNAL_PIN, OUTPUT);                         // Set the wake up pin as an output for testing purposes
 #endif     
 }
 
