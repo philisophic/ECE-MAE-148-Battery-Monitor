@@ -13,8 +13,8 @@
 
 // Global variables
 bool    wake_up                        = true;
-int     adc_teensy[NO_CELLS]           = {A0, A3, A6};                                                           // ADC channels to read voltages
-float   cell_voltage_ratios[NO_CELLS]  = {(ONE_CELL_VOLTAGE/3.255), (2*ONE_CELL_VOLTAGE/3.357), (3*ONE_CELL_VOLTAGE/3.2420)}; // Cells are in series on the LIPO
+int     adc_teensy[NO_CELLS]           = {A9, A3, A6};                                                           // ADC channels to read voltages
+float   cell_voltage_ratios[NO_CELLS]  = {(ONE_CELL_VOLTAGE/3.295), (2*ONE_CELL_VOLTAGE/3.357), (3*ONE_CELL_VOLTAGE/3.2420)}; // Cells are in series on the LIPO
 float   accumulate                     = 0;
 float   lipo_voltage[NO_CELLS]         = {0, 0, 0};
 char    jetson_log[6]                  = ""; 
