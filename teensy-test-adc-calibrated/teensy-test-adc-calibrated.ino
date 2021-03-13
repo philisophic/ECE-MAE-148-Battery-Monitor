@@ -53,7 +53,22 @@ void loop()
             
 	    for (int i = 0; i < NUM_ADC_SAMPLE; i++) 
 	    {  
-        accumulate += analogRead(adc_teensy[j]) * ADC_REF_VOLTAGE / ADC_RESOLUTION * cell_voltage_ratios[j];  
+        if(j == 2) // 12 V
+        {    
+          // Compensating the error hysteresis 
+          if((accumulate/i)<11.0000)
+          {
+            accumulate = accumulate + ((analogRead(adc_teensy[j]) * ADC_REF_VOLTAGE / ADC_RESOLUTION * cell_voltage_ratios[j]) - 0.1500);
+          }
+          else
+          {
+            accumulate = accumulate + ((analogRead(adc_teensy[j]) * ADC_REF_VOLTAGE / ADC_RESOLUTION * cell_voltage_ratios[j]) - 0.0500);
+          }
+        }
+        else // 8V and 4V
+        {
+          accumulate += analogRead(adc_teensy[j]) * ADC_REF_VOLTAGE / ADC_RESOLUTION * cell_voltage_ratios[j];  
+        }
 		    delay(2);
 	    }
       lipo_voltage[j] = accumulate/NUM_ADC_SAMPLE; 
